@@ -1,27 +1,57 @@
-import { useState } from "react"
-import { io } from "socket.io-client"
-import { Outlet, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { Outlet, useOutletContext, Link } from "react-router-dom"
+import Rooms from './Rooms'
 
-const socket = io('http://localhost:3001/profile')
 
 const Profile = () => {
+  console.log("RENDER PROFILE")
+
+  useEffect(() => {
+    socket.connect() // manual connection
+  })
   
-  const nav = useNavigate()
-  const [username, setUsername] = useState('')
-  const [room, setRoom] = useState('')
+  const [socket, userState, setUserState] = useOutletContext()
+  const username = userState.username
+
+  useEffect(() => {
+     socket.on("user_connected", (data) => {
+      console.log("user connected")
+      console.log(data)
+    })
+    return () => {
+      socket.off("user_connected")
+    }
+  })
+
+  useEffect(() => {
+     socket.on("users", (data) => {
+      console.log("users")
+      console.log(data)
+    })
+    return () => {
+      socket.off("users")
+    }
+  })
   
-  function joinRoom() {
-    socket.emit("join_room", { room: room, username: username })
-    nav('/profile/room')
-  }
+  useEffect(() => {
+    socket.on("friends", (data) => {
+      console.log("friends")
+      console.log(data);
+    });
+    return () => {
+      socket.off("friends");
+    };
+  }, [socket]);
+
+  console.log("profile ID: ", socket.id)
 
   return (
     <>
     <h2>Profile</h2>
-      <input type="text" onChange={(e) => setUsername(e.target.value)} />
-      <input type="text" placeholder="room name" onChange={(e) => setRoom(e.target.value)} />
-      <button onClick={joinRoom}>JOIN ROOM</button>
-    <Outlet context={[socket, room, username, setUsername]}/>
+    <h3>for {username}</h3>
+    {/* <Rooms /> */}
+    <Link to="/profile/messages">Messages</Link><br />
+    <Outlet context={[socket, username]}/>
     </>
   )
 }
