@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react"
 import { Outlet, useOutletContext, Link } from "react-router-dom"
-import Rooms from './Rooms'
-
 
 const Profile = () => {
   console.log("RENDER PROFILE")
 
   useEffect(() => {
+    const token = localStorage.getItem("token")
+    socket.auth = { token: token };
     socket.connect() // manual connection
   })
   
   const [socket, userState, setUserState] = useOutletContext()
   const username = userState.username
-
+  const [users, setUsers] = useState([])
+ 
   useEffect(() => {
-     socket.on("user_connected", (data) => {
+    socket.on("user_connected", (data) => {
       console.log("user connected")
       console.log(data)
+      setUsers([...users, data]) 
     })
     return () => {
       socket.off("user_connected")
@@ -24,34 +26,37 @@ const Profile = () => {
   })
 
   useEffect(() => {
+    socket.on("user_disconnected", (data) => {
+      console.log("user disconnected: ", data)
+      console.log("connected users: ", users)
+      setUsers(
+        users.filter(user => 
+          user.username !== data.username
+        )
+      )
+    })
+    return () => {
+      socket.off("user_disconnected")
+    }
+  })
+
+  useEffect(() => {
      socket.on("users", (data) => {
       console.log("users")
       console.log(data)
+      setUsers(...users, data)
     })
     return () => {
       socket.off("users")
     }
   })
   
-  useEffect(() => {
-    socket.on("friends", (data) => {
-      console.log("friends")
-      console.log(data);
-    });
-    return () => {
-      socket.off("friends");
-    };
-  }, [socket]);
-
-  console.log("profile ID: ", socket.id)
-
   return (
     <>
-    <h2>Profile</h2>
-    <h3>for {username}</h3>
+    <h2>Welcome {username}!</h2>
     {/* <Rooms /> */}
     <Link to="/profile/messages">Messages</Link><br />
-    <Outlet context={[socket, username]}/>
+    <Outlet context={[users]}/>
     </>
   )
 }
