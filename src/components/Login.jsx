@@ -1,19 +1,19 @@
-import { useState } from "react"
+
 import { useNavigate } from "react-router-dom"
 
 const Login = () => {
 
   const navigate = useNavigate()
-
+  
   function handleSubmit(e) {
     e.preventDefault()
     const data = new FormData(e.target)
     const username = data.get("username")
     const password = data.get("password")
-    signup(username, password)
+    login(username, password)
   }
 
-  async function signup(username, password) {
+  async function login(username, password) {
     console.log(username), console.log(password)
     try {
       const response = await fetch('http://localhost:3001/login', {
@@ -33,7 +33,7 @@ const Login = () => {
         const key = Object.keys(token)
         const value = Object.values(token)
         localStorage.setItem(key, value)
-        navigate("/profile")
+        navigate("/") 
       }
 
       if (response.status === 422) {
