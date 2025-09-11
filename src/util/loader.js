@@ -15,23 +15,3 @@ export async function appLoader() {
     return err
   }
 }
-
-
-
-// export async function profileLoader() {
-
-//   try {
-//     const response = await fetch('http://localhost:3001/test', {
-//       method: 'GET',
-//       headers: {
-//         'Content-type': 'application/json; charset=UTF-8'
-//       }
-//     })
-//     const data = await response.json()
-//     console.log("profileLoader: ", data)
-//     return data
-//   } catch (err) {
-//     return err
-//   }
-
-// }
