@@ -56,7 +56,7 @@ const Profile = () => {
     <h2>Welcome {username}!</h2>
     {/* <Rooms /> */}
     <Link to="/profile/messages">Messages</Link><br />
-    <Outlet context={[users]}/>
+    <Outlet context={[users, socket, username]}/>
     </>
   )
 }
