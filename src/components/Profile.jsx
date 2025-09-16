@@ -1,62 +1,30 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { Outlet, useOutletContext, Link } from "react-router-dom"
+import { jwtDecode } from "jwt-decode"
 
 const Profile = () => {
   console.log("RENDER PROFILE")
 
-  useEffect(() => {
+  const token = localStorage.getItem("token")
+  const decoded = jwtDecode(token)
+
+  useEffect(() => { // initiate manual connection
+    console.log("initate connection")
     const token = localStorage.getItem("token")
     socket.auth = { token: token };
-    socket.connect() // manual connection
+    socket.connect() 
   })
   
-  const [socket, userState, setUserState] = useOutletContext()
-  const username = userState.username
-  const [users, setUsers] = useState([])
- 
-  useEffect(() => {
-    socket.on("user_connected", (data) => {
-      console.log("user connected")
-      console.log(data)
-      setUsers([...users, data]) 
-    })
-    return () => {
-      socket.off("user_connected")
-    }
-  })
+  const [socket] = useOutletContext()
+  const username = decoded.username
+  const userId = decoded.id
 
-  useEffect(() => {
-    socket.on("user_disconnected", (data) => {
-      console.log("user disconnected: ", data)
-      console.log("connected users: ", users)
-      setUsers(
-        users.filter(user => 
-          user.username !== data.username
-        )
-      )
-    })
-    return () => {
-      socket.off("user_disconnected")
-    }
-  })
-
-  useEffect(() => {
-     socket.on("users", (data) => {
-      console.log("users")
-      console.log(data)
-      setUsers(...users, data)
-    })
-    return () => {
-      socket.off("users")
-    }
-  })
-  
   return (
     <>
     <h2>Welcome {username}!</h2>
     {/* <Rooms /> */}
     <Link to="/profile/messages">Messages</Link><br />
-    <Outlet context={[users, socket, username]}/>
+    <Outlet context={[socket, username, userId]}/>
     </>
   )
 }
