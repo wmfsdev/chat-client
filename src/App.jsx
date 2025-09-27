@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import './App.css'
-import { Link, Outlet, useLoaderData } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import { io } from 'socket.io-client'
 
 const token = localStorage.getItem("token")
@@ -9,13 +9,14 @@ const socket = io('http://localhost:3001/profile', {
   autoConnect: false, // manually called in Profile
   auth: { 
     token: token,
-  }
+  },
+  reconnectionDelay: 10000, 
+  reconnectionDelayMax: 10000 
 })
 
 const App = () => {
   
   const [userState, setUserState] = useState()
-  const user = useLoaderData()
 
   return (
     <>
