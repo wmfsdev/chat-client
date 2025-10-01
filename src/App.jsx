@@ -1,7 +1,7 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { io } from 'socket.io-client'
 
 const token = localStorage.getItem("token")
@@ -16,7 +16,18 @@ const socket = io('http://localhost:3001/profile', {
 
 const App = () => {
   
+  const navigate = useNavigate()
   const [userState, setUserState] = useState()
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    socket.on("connect_error", err => {
+      console.log(err instanceof Error); // true
+      console.log(err.message);
+      setError(err)
+      navigate('/error')
+    });
+  })
 
   return (
     <>
@@ -30,7 +41,7 @@ const App = () => {
       <Link to="rooms/:id">Rooms</Link>
     </div>
     </header>
-    <Outlet context={ [socket, userState, setUserState] }/>
+    <Outlet context={ {socket, userState, setUserState, error} }/>
     </>
   )
 }
