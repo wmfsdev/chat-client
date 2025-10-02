@@ -1,9 +1,10 @@
 
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useOutletContext } from "react-router-dom"
 
 const Login = () => {
 
   const navigate = useNavigate()
+  const [socket, error, setAuth] = useOutletContext()
   
   function handleSubmit(e) {
     e.preventDefault()
@@ -14,7 +15,7 @@ const Login = () => {
   }
 
   async function login(username, password) {
-    console.log(username), console.log(password)
+    // console.log(username), console.log(password)
     try {
       const response = await fetch('http://localhost:3001/login', {
         method: "POST",
@@ -29,11 +30,12 @@ const Login = () => {
 
       if (response.status === 200) {
         console.log("response status 200")
+        setAuth(true)
         const token = await response.json()
         const key = Object.keys(token)
         const value = Object.values(token)
         localStorage.setItem(key, value)
-        navigate("/") 
+        navigate("/profile")
       }
 
       if (response.status === 422) {
