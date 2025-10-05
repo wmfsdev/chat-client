@@ -1,10 +1,13 @@
 
+import { useState } from 'react'
 import '../App.css'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 
 function Signup() {
 
   const navigate = useNavigate()
+  const [socket, error, setAuth] = useOutletContext()
+  const [signupStatus, setSignupStatus] = useState()
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -31,6 +34,7 @@ function Signup() {
 
       if (response.status === 200) {
         console.log("response status 200")
+        setAuth(true)
         const token = await response.json()
         const key = Object.keys(token)
         const value = Object.values(token)
@@ -39,8 +43,9 @@ function Signup() {
       }
 
       if (response.status === 422) {
-        const errors = await response.json()
-        setError(errors)
+        const info = await response.json()
+        console.log(info)
+        setSignupStatus(info)
       }
     } catch(err) {
       console.log(err)
@@ -65,7 +70,7 @@ function Signup() {
         </div>
         <button type="submit">submit</button>
       </form>
-      {/* { error && error.map((item, index) => <p key={index}>{item.msg}</p> )} */}
+      { signupStatus && signupStatus.map((item, index) => <p key={index}>{item.msg}</p> )}
     </div>
   )
 }
