@@ -9,9 +9,14 @@ export async function appLoader() {
       }
     })
     const data = await response.json()
-    console.log("appLoader: ", data)
-    return data
+    console.log(response.status)
+    if (response.status !== 200) {
+      return false
+    } else {
+      return true
+    }
   } catch (err) {
+    console.log(err)
     return err
   }
 }
