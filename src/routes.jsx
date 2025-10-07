@@ -6,7 +6,7 @@ import Rooms from "./components/Rooms";
 import Error from "./components/Error";
 import Messages from "./components/Messages";
 import Room from "./components/Room";
-import { appLoader } from "./util/loader";
+import { appLoader, profileLoader } from "./util/loader";
 
 const routes = [
   {
@@ -20,6 +20,7 @@ const routes = [
       { path: '/login', element: <Login /> },
       { path: '/profile',
         element: <Profile />,
+        loader: profileLoader,
         children: [
           { path: '/profile/messages', element: <Messages /> }
         ] 
