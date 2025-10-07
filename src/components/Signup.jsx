@@ -6,7 +6,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom'
 function Signup() {
 
   const navigate = useNavigate()
-  const [socket, error, setAuth] = useOutletContext()
+  const [socket, error, setError, auth, setAuth] = useOutletContext()
   const [signupStatus, setSignupStatus] = useState()
 
   function handleSubmit(e) {
@@ -33,7 +33,6 @@ function Signup() {
       })
 
       if (response.status === 200) {
-        console.log("response status 200")
         setAuth(true)
         const token = await response.json()
         const key = Object.keys(token)
@@ -44,11 +43,12 @@ function Signup() {
 
       if (response.status === 422) {
         const info = await response.json()
-        console.log(info)
         setSignupStatus(info)
       }
     } catch(err) {
       console.log(err)
+      setError(err)
+      navigate('/error')
     }
   }
 
