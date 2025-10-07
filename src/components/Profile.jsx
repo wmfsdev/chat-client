@@ -1,22 +1,22 @@
 import { useEffect } from "react"
-import { Outlet, useOutletContext, Link } from "react-router-dom"
+import { Outlet, useOutletContext, Link, useLoaderData } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 
 const Profile = () => {
   console.log("RENDER PROFILE")
   
+  const token = useLoaderData()
   const [socket] = useOutletContext()
-  const token = localStorage.getItem("token")
-  const decoded = jwtDecode(token)
-  const username = decoded.username
-  const userId = decoded.id
 
   useEffect(() => { // initiate manual connection
     console.log("initiate connection")
-    const token = localStorage.getItem("token")
     socket.auth = { token: token };
     socket.connect()
-  }, [socket])
+  }, [socket, token])
+
+  const decoded = jwtDecode(token)
+  const username = decoded.username
+  const userId = decoded.id
 
   return (
     <>

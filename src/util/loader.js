@@ -1,4 +1,6 @@
 
+import { redirect } from "react-router-dom"
+
 export async function appLoader() {
   const token = localStorage.getItem("token")
   try {
@@ -9,7 +11,7 @@ export async function appLoader() {
       }
     })
     const data = await response.json()
-    console.log(response.status)
+    
     if (response.status !== 200) {
       return false
     } else {
@@ -18,5 +20,15 @@ export async function appLoader() {
   } catch (err) {
     console.log(err)
     return err
+  }
+}
+
+export async function profileLoader() {
+  const token = localStorage.getItem("token")
+
+  if (!token) {
+    throw redirect('/')
+  } else {
+    return token
   }
 }
