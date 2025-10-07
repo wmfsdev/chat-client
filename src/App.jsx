@@ -20,8 +20,9 @@ const App = () => {
   const navigate = useNavigate()
   const [error, setError] = useState(null)
   const [auth, setAuth] = useState(false)
-
+  
   useEffect(() => {
+    console.log("connect_error")
     socket.on("connect_error", err => {
       if (socket.active) {
       // temporary disconnection, the socket will automatically try to reconnect
@@ -32,9 +33,18 @@ const App = () => {
         setError(err)
         navigate('/error')
       }
-    
     });
-  })
+    return () => {
+      socket.off("connect_error")
+    }
+  }, [navigate])
+
+  const logOut = () => {
+    console.log("disconnect")
+    socket.disconnect()
+    setAuth(false)
+    localStorage.clear()
+  }
 
   return (
     <>
@@ -42,13 +52,20 @@ const App = () => {
     <h1>Chat App</h1>
     <div className='navigation'>
       <Link to="/">Home</Link><br />
-      { auth || loaderAuth ? <><Link to="profile">Profile</Link><br /></> : null }
-      <Link to="login">Login</Link><br />
-      <Link to="sign-up">Signup</Link><br />
-      <Link to="rooms/:id">Rooms</Link>
+      { auth || loaderAuth ? 
+        <>
+        <Link to="profile">Profile</Link><br />
+        <Link to="rooms/:id">Rooms</Link><br />
+        <Link to="/" onClick={logOut}>Sign-out</Link>
+        </>
+      : <>
+        <Link to="login">Login</Link><br />
+        <Link to="sign-up">Signup</Link><br />
+        </>
+      } 
     </div>
     </header>
-    <Outlet context={ [socket, error, auth, setAuth] }/>
+    <Outlet context={ [socket, error, setError, auth, setAuth] }/>
     </>
   )
 }
