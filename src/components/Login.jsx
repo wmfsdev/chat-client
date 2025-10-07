@@ -3,10 +3,11 @@ import { useState } from "react"
 import { useNavigate, useOutletContext } from "react-router-dom"
 
 const Login = () => {
-
+  console.log("LOGIN")
   const navigate = useNavigate()
-  const [socket, error, auth, setAuth] = useOutletContext()
+  const [socket, error, setError, auth, setAuth] = useOutletContext()
   const [loginStatus, setLoginStatus] = useState(auth)
+  const [validationErrors, setValidationErrors] = useState(null)
   
   function handleSubmit(e) {
     e.preventDefault()
@@ -17,7 +18,6 @@ const Login = () => {
   }
 
   async function login(username, password) {
-    // console.log(username), console.log(password)
     try {
       const response = await fetch('http://localhost:3001/login', {
         method: "POST",
@@ -48,12 +48,14 @@ const Login = () => {
 
       if (response.status === 422) {
         const errors = await response.json()
+        setValidationErrors(errors)
         console.log(errors)
-       // setError(errors)
       }
 
     } catch(err) {
       console.log(err)
+      setError(err)
+      navigate('/error')
     }
   }
 
@@ -72,6 +74,8 @@ const Login = () => {
       <button type="submit">submit</button>
       </form>
       { loginStatus ? <p>{loginStatus}</p>  : null }
+      { validationErrors && 
+        validationErrors.map((error, index) => <p key={index}>{error.msg}</p> )} 
     </>
   )
 }
