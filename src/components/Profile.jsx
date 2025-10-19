@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { Outlet, useOutletContext, Link, useLoaderData } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
+import Messages from "./Messages"
 
 const Profile = () => {
   console.log("RENDER PROFILE")
@@ -21,8 +22,7 @@ const Profile = () => {
   return (
     <>
     <h2>Welcome {username}!</h2>
-    <Link to="/profile/messages">Messages</Link><br />
-    <Outlet context={[socket, username, userId]}/>
+    <Messages socket={socket} username={username} userId={userId}/>
     </>
   )
 }
