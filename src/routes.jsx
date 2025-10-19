@@ -18,12 +18,9 @@ const routes = [
       { path: '/rooms/:id', element: <Room /> },
       { path: '/sign-up', element: <Signup /> },
       { path: '/login', element: <Login /> },
-      { path: '/profile',
+      { path: '/messages',
         element: <Profile />,
         loader: profileLoader,
-        children: [
-          { path: '/profile/messages', element: <Messages /> }
-        ] 
       }
     ]
   },
