@@ -1,12 +1,13 @@
-import { useOutletContext } from "react-router-dom"
 import { useState, useEffect } from "react"
 import Chat from "./Chat"
 
-const Messages = () => {
+const Messages = ({ socket, username, userId }) => {
 
-  const [socket, username, userId] = useOutletContext()
   const [displayChat, setDisplayChat] = useState(false)
-
+  const [users, setUsers] = useState([])
+  const [userCount, setUserCount] = useState(null)
+  const [notification, setNotification] = useState(null)
+  
   function initChat(e) {
     if (displayChat !== false) {
       setDisplayChat(false)
@@ -16,40 +17,37 @@ const Messages = () => {
     setDisplayChat({ recipientId: recipientId, recipientUsername: recipientUsername })
   }
 
-  const [users, setUsers] = useState([])
-
-  useEffect(() => {
+  useEffect(() => { // REQUEST USERS - EMIT
     console.log("Messages useEffect emit req_users")
     socket.emit("req_users")
   }, [socket])
   
-  useEffect(() => {
+  useEffect(() => { // USER CONNECT
     socket.on("user_connected", (data) => {
       console.log("user connected")
       console.log(data)
-      setUsers([...users, data]) 
+      setUsers([...users, data])
     })
     return () => {
       socket.off("user_connected")
     }
-  })
+  }, [users, socket])
 
-  useEffect(() => {
-  //  socket.emit("req_users")
-    socket.on("users", (data) => {
-      console.log("users")
-      console.log(data)
+  useEffect(() => { // RECEIVE USERS - ON
+    console.log("useEffect users")
+    socket.on("users", (data, userCount) => {
+      console.log("users: ", data)
+      setUserCount(userCount)
       setUsers(...users, data)
     })
     return () => {
       socket.off("users")
     }
-  })
+  }, [])
   
-  useEffect(() => {
+  useEffect(() => { // USER DISCONNECT
     socket.on("user_disconnected", (data) => {
       console.log("user disconnected: ", data)
-      console.log("connected users: ", users)
       setUsers(
         users.filter(user => 
           user.username !== data.username
@@ -63,22 +61,21 @@ const Messages = () => {
 
   return (
     <>
-    <h2>MESSAGES</h2>
     <div className="chat-frame">
       <div className="chat-users">
-        <h3>Users Online:</h3>
+        <h3>Online: {userCount}</h3>
         <ul>
-          {users.map(user => (
-            <div key={user.userID}className="chat-user" onClick={(e) => initChat(e)}>
-              <li data-userid={user.userID}>{user.username}</li>
-            </div>
-          ))}
+          {
+          users.map(user => { 
+            return  <div key={user.userID} className={"chat-user" + (notification ? '-message' : '') } >
+                      <li onClick={ (user.username === username ? null : (e) => initChat(e) )} className={(user.username === username) ? '' : 'link' } data-userid={user.userID}>{user.username + (user.username === username ? ' (you)' : '')}</li>
+                    </div>
+          })
+          }
         </ul>
       </div>
-      <div className="chat-messages">
-        { displayChat ? <Chat recipientInfo={displayChat} socket={socket} sender={{ username: username, userId: userId }} /> : null }
+        { displayChat ? <Chat recipientInfo={displayChat} socket={socket} sender={{ username: username, userId: userId }} notify={{notification, setNotification}} /> : null }
       </div>
-    </div>
     </>
   )
 }
