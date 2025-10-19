@@ -37,7 +37,7 @@ const Login = () => {
         const key = Object.keys(token)
         const value = Object.values(token)
         localStorage.setItem(key, value)
-        navigate("/profile")
+        navigate("/messages")
       }
 
       if (response.status === 401) {
@@ -61,21 +61,21 @@ const Login = () => {
 
   return (
     <>
-    <h2>Login</h2>
+    <div className="login"><h2>LOGIN</h2>
       <form method="post" onSubmit={handleSubmit} className="material-form">
       <div className="input-field">
         <input title="Username may only contain alphanumeric characters" id="username" name="username" type="text" placeholder=""  />
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">USERNAME</label>
       </div>
       <div className="input-field">
-        <input id="password" name="password" type="password" minLength="1" maxLength="25" required={true} />
-        <label htmlFor="password">Password</label>   
+        <input id="password" name="password" type="password" minLength="1" maxLength="25" required={true} /> <label htmlFor="password">PASSWORD</label>  
       </div>
-      <button type="submit">submit</button>
+      <button type="submit">SUBMIT</button>
       </form>
+    </div>
       { loginStatus ? <p>{loginStatus}</p>  : null }
       { validationErrors && 
-        validationErrors.map((error, index) => <p key={index}>{error.msg}</p> )} 
+        validationErrors.map((error, index) => <p key={index}>{error.msg}</p> )}
     </>
   )
 }
