@@ -49,13 +49,13 @@ const App = () => {
   return (
     <>
     <header>
-    <h1>Chat App</h1>
+    <h1>Let's Talk</h1>
     <div className='navigation'>
       <Link to="/">Home</Link><br />
       { auth || loaderAuth ? 
         <>
-        <Link to="profile">Profile</Link><br />
-        <Link to="rooms/:id">Rooms</Link><br />
+        <Link to="messages">Messages</Link><br />
+        {/* <Link to="rooms/:id">Rooms</Link><br /> */}
         <Link to="/" onClick={logOut}>Sign-out</Link>
         </>
       : <>
