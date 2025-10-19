@@ -54,21 +54,21 @@ function Signup() {
 
   return (
       <div className="signup">
-      <h1>SIGNUP</h1>
+      <h2>SIGNUP</h2>
       <form method="post" onSubmit={handleSubmit} className="material-form">
         <div className="input-field">
           <input title="Username may only contain alphanumeric characters" id="username" name="username" type="text" placeholder=""  />
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">USERNAME</label>
         </div>
         <div className="input-field">
           <input id="password" name="password" type="password" minLength="1" maxLength="25" required={true} />
-          <label htmlFor="password">Password</label>   
+          <label htmlFor="password">PASSWORD</label>   
         </div>
         <div className="input-field">
           <input id="password_confirm" name="password_confirm" type="password" required={true} />
-          <label htmlFor="password_confirm">Confirm</label>
+          <label htmlFor="password_confirm">CONFIRM</label>
         </div>
-        <button type="submit">submit</button>
+        <button type="submit">SUBMIT</button>
       </form>
       { signupStatus && signupStatus.map((item, index) => <p key={index}>{item.msg}</p> )}
     </div>
