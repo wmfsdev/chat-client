@@ -19,6 +19,7 @@ const Chat = ({ recipientInfo, socket, sender, notify }) => {
         return console.log("bad request")
       } else {
         setChat([...chat, { id: id, username: sender.username, message: message, timestamp: Date.now() }])
+        setMessage('')
       }
     })
   }
@@ -79,7 +80,7 @@ const Chat = ({ recipientInfo, socket, sender, notify }) => {
         ))}
       </ul> 
       <div className="chat-type">
-        <input type="text" onChange={(e) => setMessage(e.target.value)} />
+        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
         <button onClick={sendMessage}>SEND</button>
       </div>
     </div>
