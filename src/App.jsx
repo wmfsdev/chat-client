@@ -22,8 +22,8 @@ const App = () => {
   const [auth, setAuth] = useState(false)
   
   useEffect(() => {
-    console.log("connect_error")
     socket.on("connect_error", err => {
+      console.log("connect_error")
       if (socket.active) {
       // temporary disconnection, the socket will automatically try to reconnect
         console.log(err)
@@ -44,6 +44,7 @@ const App = () => {
     socket.disconnect()
     setAuth(false)
     localStorage.clear()
+    navigate('/')
   }
 
   return (
@@ -51,14 +52,14 @@ const App = () => {
     <header>
     <h1>Let's Talk</h1>
     <div className='navigation'>
-      <Link to="/">Home</Link><br />
       { auth || loaderAuth ? 
         <>
-        <Link to="messages">Messages</Link><br />
-        {/* <Link to="rooms/:id">Rooms</Link><br /> */}
+        <Link to="/rooms/public">Public Chat</Link><br />
+        <Link to="messages">Private Chat</Link><br />
         <Link to="/" onClick={logOut}>Sign-out</Link>
         </>
       : <>
+        <Link to="/">Home</Link><br />
         <Link to="login">Login</Link><br />
         <Link to="sign-up">Signup</Link><br />
         </>
