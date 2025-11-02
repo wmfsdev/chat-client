@@ -15,7 +15,7 @@ const routes = [
     element: <App/>,
     children: [
       { path: '/error', element: <Error /> },
-      { path: '/rooms/:id', element: <Room /> },
+      { path: '/rooms/:id', element: <Room />, loader: profileLoader },
       { path: '/sign-up', element: <Signup /> },
       { path: '/login', element: <Login /> },
       { path: '/messages',
