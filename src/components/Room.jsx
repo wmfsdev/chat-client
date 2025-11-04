@@ -11,7 +11,7 @@ const Room = () => {
   const { id } = useParams()
   const token = useLoaderData()
   const decoded = jwtDecode(token)
-  const userId= decoded.id
+  const userId = decoded.id
   const username = decoded.username
 
   useEffect(() => { // REQUEST USERS - EMIT
@@ -44,12 +44,13 @@ const Room = () => {
           user.username !== data.username
         )
       )
+      console.log("filter", userCount)
       setUserCount(users.length - 1)
     })
     return () => {
       socket.off("user_disconnected")
     }
-  })
+  },  [users, userCount, socket])
 
   return (
     <>
