@@ -57,15 +57,15 @@ function Signup() {
       <h2>SIGNUP</h2>
       <form method="post" onSubmit={handleSubmit} className="material-form">
         <div className="input-field">
-          <input title="Username may only contain alphanumeric characters" id="username" name="username" type="text" placeholder=""  />
+          <input title="username" id="username" name="username" type="text" minLength="5" maxLength="18" placeholder="May only contain alphanumeric characters" required={true} />
           <label htmlFor="username">USERNAME</label>
         </div>
         <div className="input-field">
-          <input id="password" name="password" type="password" minLength="1" maxLength="25" required={true} />
+          <input id="password" name="password" type="password" minLength="6" maxLength="25" required={true} />
           <label htmlFor="password">PASSWORD</label>   
         </div>
         <div className="input-field">
-          <input id="password_confirm" name="password_confirm" type="password" required={true} />
+          <input id="password_confirm" name="password_confirm" type="password" minLength="6" maxLength="25" required={true} />
           <label htmlFor="password_confirm">CONFIRM</label>
         </div>
         <button type="submit">SUBMIT</button>

@@ -64,11 +64,11 @@ const Login = () => {
     <div className="login"><h2>LOGIN</h2>
       <form method="post" onSubmit={handleSubmit} className="material-form">
       <div className="input-field">
-        <input title="Username may only contain alphanumeric characters" id="username" name="username" type="text" placeholder=""  />
+        <input title="username" id="username" name="username" minLength="5" maxLength="18" required={true} type="text" placeholder=""  />
         <label htmlFor="username">USERNAME</label>
       </div>
       <div className="input-field">
-        <input id="password" name="password" type="password" minLength="1" maxLength="25" required={true} /> <label htmlFor="password">PASSWORD</label>  
+        <input id="password" name="password" type="password" minLength="6" maxLength="25" required={true} /> <label htmlFor="password">PASSWORD</label>
       </div>
       <button type="submit">SUBMIT</button>
       </form>

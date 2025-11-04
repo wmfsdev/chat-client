@@ -136,7 +136,7 @@ const Chat = ({ recipientInfo, socket, sender, notify }) => {
         ))}
       </ul> 
       <div className="chat-type">
-        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
+        <input type="text" minLength="1" maxLength="500" required={true} value={message} onChange={(e) => setMessage(e.target.value)} />
         <button onClick={sendMessage}>SEND</button>
       </div>
     </div>
