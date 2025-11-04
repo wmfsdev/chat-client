@@ -48,7 +48,7 @@ const Chat = ({ recipientInfo, socket, sender, notify }) => {
   useEffect(() => { // RETRIEVE CHAT HISTORY
     async function getDirectChat() {
       try {
-        const response = await fetch(`http://localhost:3001/direct_chat`, { 
+        const response = await fetch(import.meta.env.VITE_API_URL + '/direct_chat', { 
           method: "POST",
           headers: {
             'Content-type': 'application/json; charset=UTF-8'
@@ -71,7 +71,7 @@ const Chat = ({ recipientInfo, socket, sender, notify }) => {
 
     async function getPublicChar() {
       try {
-        const response = await fetch(`http://localhost:3001/public_chat`, {
+        const response = await fetch(import.meta.env.VITE_API_URL + '/public_chat', {
           method: "POST",
           headers: {
             'Content-type': 'application/json; charset=UTF-8'
@@ -101,12 +101,14 @@ const Chat = ({ recipientInfo, socket, sender, notify }) => {
   
   useEffect(() => { // RECEIVE PRIVATE MESSAGE
     socket.on("receive_priv_message", (data) => {
+      console.log("receive private message")
       if (data.from.id !== conversationId) { 
         console.log("!data id: ", data)
       // this data is logged if not directly in same room as sender
       } else {
+        console.log(data)
         notify.setNotification(data.from.username)
-        setChat([...chat, { id: data.id, username: data.from.username, message: data.message }])
+        setChat([...chat, { id: data.id, username: data.from.username, message: data.message, timestamp: data.timestamp }])
       }
     })
     return () => {

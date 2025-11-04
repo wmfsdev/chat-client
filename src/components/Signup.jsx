@@ -20,7 +20,7 @@ function Signup() {
 
   async function signup(username, password, confirmPwd) {
     try {
-      const response = await fetch('http://localhost:3001/signup', {
+      const response = await fetch(import.meta.env.VITE_API_URL + '/signup', {
         method: "POST",
         body: JSON.stringify({
           username: username,

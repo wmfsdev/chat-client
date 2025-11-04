@@ -5,7 +5,9 @@ import { Link, Outlet, useNavigate, useLoaderData } from 'react-router-dom'
 import { io } from 'socket.io-client'
 
 const token = localStorage.getItem("token")
-const socket = io('http://localhost:3001/profile', {
+const socketConnection = import.meta.env.VITE_API_URL + '/profile'
+
+const socket = io(socketConnection, {
   autoConnect: false, // manually called in Profile
   auth: { 
     token: token,

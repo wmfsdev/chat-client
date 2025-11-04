@@ -4,7 +4,7 @@ import { redirect } from "react-router-dom"
 export async function appLoader() {
   const token = localStorage.getItem("token")
   try {
-    const response = await fetch('http://localhost:3001/auth', {
+    const response = await fetch(import.meta.env.VITE_API_URL + '/auth', {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8', 'Authorization': `Bearer ${token}`
