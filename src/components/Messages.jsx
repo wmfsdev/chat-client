@@ -24,8 +24,6 @@ const Messages = ({ socket, username, userId }) => {
   
   useEffect(() => { // USER CONNECT
     socket.on("user_connected", (data) => {
-      console.log("user connected")
-      console.log(data)
       setUsers([...users, data])
     })
     return () => {
@@ -47,17 +45,17 @@ const Messages = ({ socket, username, userId }) => {
   
   useEffect(() => { // USER DISCONNECT
     socket.on("user_disconnected", (data) => {
-      console.log("user disconnected: ", data)
       setUsers(
         users.filter(user => 
           user.username !== data.username
         )
       )
+      setUserCount(users.length - 1)
     })
     return () => {
       socket.off("user_disconnected")
     }
-  })
+  }, [users, userCount, socket])
 
   return (
     <>
