@@ -2,9 +2,7 @@ import App from "./App";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
-import Rooms from "./components/Rooms";
 import Error from "./components/Error";
-import Messages from "./components/Messages";
 import Room from "./components/Room";
 import { appLoader, profileLoader } from "./util/loader";
 
