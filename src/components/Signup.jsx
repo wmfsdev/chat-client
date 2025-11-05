@@ -38,7 +38,7 @@ function Signup() {
         const key = Object.keys(token)
         const value = Object.values(token)
         localStorage.setItem(key, value)
-        navigate("/profile")
+        navigate("/messages")
       }
 
       if (response.status === 422) {
