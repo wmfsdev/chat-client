@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
 
-const Chat = ({ recipientInfo, socket, sender, notify }) => {
+const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat }) => {
 
   const [message, setMessage] = useState('')
-  const [chat, setChat] = useState([])
   const conversationId = recipientInfo.recipientId
   
   function sendMessage() {
@@ -99,29 +98,11 @@ const Chat = ({ recipientInfo, socket, sender, notify }) => {
     }
   }, [conversationId, sender.userId])
   
-  useEffect(() => { // RECEIVE PRIVATE MESSAGE
-    socket.on("receive_priv_message", (data) => {
-      console.log("receive private message")
-      if (data.from.id !== conversationId) { 
-        console.log("!data id: ", data)
-      // this data is logged if not directly in same room as sender
-      } else {
-        console.log(data)
-        notify.setNotification(data.from.username)
-        setChat([...chat, { id: data.id, username: data.from.username, message: data.message, timestamp: data.timestamp }])
-      }
-    })
-    return () => {
-      socket.off("receive_priv_message")
-    }
-  })
-
   useEffect(() => { // RECEIVE PUBLIC MESSAGE
     socket.on("receive_public_message", (data) => {
       const { id, username, message, timestamp } = data
       setChat([...chat, { id: id, username: username, message: message, timestamp: timestamp }])
     })
-
     return () => {
       socket.off("receive_public_message")
     }
@@ -129,7 +110,7 @@ const Chat = ({ recipientInfo, socket, sender, notify }) => {
 
   return (
     <div className="chat-messages">
-      <p>Chatting with: {recipientInfo.recipientUsername}</p>
+      <p>PUBLIC CHAT</p>
       <ul>
         {chat.map(data => (
           <li key={data.id}>{data.username}: {data.message}<p>{formatDate(data.timestamp)}</p></li>
