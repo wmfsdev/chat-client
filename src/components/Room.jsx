@@ -8,6 +8,7 @@ const Room = () => {
   const [socket] = useOutletContext()
   const [users, setUsers] = useState([])
   const [userCount, setUserCount] = useState(null)
+  const [chat, setChat] = useState([])
   const { id } = useParams()
   const token = useLoaderData()
   const decoded = jwtDecode(token)
@@ -44,7 +45,6 @@ const Room = () => {
           user.username !== data.username
         )
       )
-      console.log("filter", userCount)
       setUserCount(users.length - 1)
     })
     return () => {
@@ -58,7 +58,13 @@ const Room = () => {
       <div className="chat-users">
         <h3>Online: {userCount}</h3>
       </div>
-      <Chat recipientInfo={{ recipientId: id , recipientUsername: id }} socket={socket} sender={{ username: username, userId: userId  }}/>
+      <Chat 
+        recipientInfo={{ recipientId: id , recipientUsername: id }} 
+        socket={socket} 
+        sender={{ username: username, userId: userId  }}
+        chat={chat}
+        setChat={setChat}
+      />
     </div>
     </>
   )
