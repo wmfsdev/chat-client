@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react'
 import './App.css'
-import { Link, Outlet, useNavigate, useLoaderData } from 'react-router-dom'
+import { Link, Outlet, useNavigate, useLoaderData, useLocation } from 'react-router-dom'
 import { io } from 'socket.io-client'
 
 const token = localStorage.getItem("token")
@@ -22,6 +22,8 @@ const App = () => {
   const navigate = useNavigate()
   const [error, setError] = useState(null)
   const [auth, setAuth] = useState(false)
+  const [homeNavStatus, setHomeNavStatus] = useState(true)
+  const location = useLocation()
   
   useEffect(() => {
     socket.on("connect_error", err => {
@@ -40,6 +42,12 @@ const App = () => {
       socket.off("connect_error")
     }
   }, [navigate])
+
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setHomeNavStatus(false)
+    } else setHomeNavStatus(true)
+  }, [location])
 
   const logOut = () => {
     console.log("disconnect")
@@ -68,6 +76,14 @@ const App = () => {
       } 
     </div>
     </header>
+    { homeNavStatus ? 
+      <div className="app-desc">
+        <p><b>Let's Talk</b> allows you to share a public chat space with other users, participating in real-time conversations and catching up with what others have been discussing whilst you were away from the action. If you wish to engage in one-on-one conversations with any other user you can easily start up a private chat by clicking their name in the list of users currently online.</p>
+      </div>
+      :
+      null
+    }
+   
     <Outlet context={ [socket, error, setError, auth, setAuth] }/>
     </>
   )
