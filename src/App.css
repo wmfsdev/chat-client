@@ -27,6 +27,10 @@ header {
   margin-bottom: 40px;
 }
 
+.app-desc {
+  max-width: 650px;
+}
+
 .chat-frame {
   display: flex;
   margin-top: 40px;
@@ -120,6 +124,11 @@ header {
   gap: 10px;
 }
 
+
+svg {
+  height: 10px
+}
+
 .chat-user:hover {
   list-style-type: none;
   list-style: none;
@@ -127,10 +136,16 @@ header {
 
 .chat-user {
   color: #646cff;
+  display: flex;
+  align-items: center;
 }
 
 .chat-user:nth-child(odd) {
   color: #5a61e3;
+}
+
+.chat-user li {
+  margin-right: 10px;
 }
 
 .link {
