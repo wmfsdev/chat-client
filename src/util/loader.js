@@ -10,8 +10,8 @@ export async function appLoader() {
         'Content-type': 'application/json; charset=UTF-8', 'Authorization': `Bearer ${token}`
       }
     })
-    const data = await response.json()
-    
+    await response.json()
+
     if (response.status !== 200) {
       return false
     } else {
