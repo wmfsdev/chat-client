@@ -7,6 +7,8 @@ const Messages = ({ socket, username, userId }) => {
   const [users, setUsers] = useState([])
   const [userCount, setUserCount] = useState(null)
   const [notification, setNotification] = useState(null)
+
+  const [chat, setChat] = useState([])
   
   function initChat(e) {
     if (displayChat !== false) {
@@ -16,6 +18,17 @@ const Messages = ({ socket, username, userId }) => {
     const recipientUsername = e.target.innerText
     setDisplayChat({ recipientId: recipientId, recipientUsername: recipientUsername })
   }
+
+  useEffect(() => { // RECEIVE PRIVATE MESSAGE
+    socket.on("receive_priv_message", (data) => {
+      console.log("receive private message")
+      setNotification(data.from.username)
+      setChat([...chat, { id: data.id, username: data.from.username, message: data.message, timestamp: data.timestamp }])
+    })
+    return () => {
+      socket.off("receive_priv_message")
+    }
+  })
 
   useEffect(() => { // REQUEST USERS - EMIT
     console.log("Messages useEffect emit req_users")
@@ -57,22 +70,42 @@ const Messages = ({ socket, username, userId }) => {
     }
   }, [users, userCount, socket])
 
+
   return (
     <>
     <div className="chat-frame">
       <div className="chat-users">
         <h3>Online: {userCount}</h3>
         <ul>
-          {
-          users.map(user => { 
-            return  <div key={user.userID} className={"chat-user" + (notification ? '-message' : '') } >
-                      <li onClick={ (user.username === username ? null : (e) => initChat(e) )} className={(user.username === username) ? '' : 'link' } data-userid={user.userID}>{user.username + (user.username === username ? ' (you)' : '')}</li>
+        { users.map(user => { 
+          return  <div key={user.userID} className="chat-user">
+                    <li 
+                      onClick={ (user.username === username ? null : (e) => initChat(e) )} 
+                      className={(user.username === username) ? '' : 'link' } 
+                      data-userid={user.userID}>{user.username + (user.username === username ? ' (you)' : '')}
+                    </li>
+                    <div className="message-notify">
+                      { notification === user.username ? 
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="50" cy="50" r="50" fill="#6ee2a6"/>
+                        </svg>
+                        : null  
+                      }
                     </div>
-          })
-          }
+                  </div>
+        }) }
         </ul>
       </div>
-        { displayChat ? <Chat recipientInfo={displayChat} socket={socket} sender={{ username: username, userId: userId }} notify={{notification, setNotification}} /> : null }
+        { displayChat ? 
+          <Chat 
+            recipientInfo={displayChat} 
+            socket={socket} 
+            sender={{ username: username, userId: userId }} 
+            notify={{notification, setNotification}}
+            chat={chat}
+            setChat={setChat}
+          /> 
+          : null }
       </div>
     </>
   )
