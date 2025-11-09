@@ -109,13 +109,14 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat }) => {
   })
 
   return (
-    <div className="chat-messages">
-      <p>PUBLIC CHAT</p>
-      <ul>
-        {chat.map(data => (
-          <li key={data.id}>{data.username}: {data.message}<p>{formatDate(data.timestamp)}</p></li>
-        ))}
-      </ul> 
+    <div className="chat-wrapper">
+      <div className="chat-messages">
+        <ul>
+          {chat.map(data => (
+            <li key={data.id}>{data.username}: {data.message}<p>{formatDate(data.timestamp)}</p></li>
+          ))}
+        </ul>
+      </div>   
       <div className="chat-type">
         <input type="text" minLength="1" maxLength="500" required={true} value={message} onChange={(e) => setMessage(e.target.value)} />
         <button onClick={sendMessage}>SEND</button>
