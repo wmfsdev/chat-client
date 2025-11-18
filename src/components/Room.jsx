@@ -5,6 +5,7 @@ import Chat from "./Chat"
 
 const Room = () => {
 
+  const [chatStatus, setChatStatus] = useState(null)
   const [socket] = useOutletContext()
   const [users, setUsers] = useState([])
   const [userCount, setUserCount] = useState(null)
@@ -64,6 +65,7 @@ const Room = () => {
         sender={{ username: username, userId: userId  }}
         chat={chat}
         setChat={setChat}
+        setChatStatus={setChatStatus}
       />
     </div>
     </>
