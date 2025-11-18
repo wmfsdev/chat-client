@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react"
 
-const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat }) => {
+const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat, setChatStatus }) => {
 
   const [message, setMessage] = useState('')
+  const [messageLimitStatus, setMessageLimitStatus] = useState(false)
   const conversationId = recipientInfo.recipientId
   
   function sendMessage() {
     const id = crypto.randomUUID()
 
     if (conversationId === "public") { // PUBLIC
+      console.log("PUBLIC", conversationId)
       socket.emit("send_public_message", {
         id: id, 
         room: "public",
@@ -18,11 +20,16 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat }) => {
       }, (response) => {
         if (response.status === "Bad Request") {
           return console.log(response.status)
+        } else if (response.status === "Message Limit") {
+          setMessageLimitStatus(`You have reached the message limit. Try again in ${response.timeleft} seconds`)
         } else {
           setChat([...chat, { id: id, username: sender.username, message: message, timestamp: Date.now() }])
+          setMessage('')
+          setMessageLimitStatus(false)
         }
       })
     } else { // PRIVATE
+      console.log("PRIVATE", conversationId)
       socket.emit("send_priv_message", { 
         from: { id: sender.userId, username: sender.username }, 
         to: conversationId, 
@@ -31,9 +38,12 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat }) => {
       }, (response) => {
         if (response.status === "Bad Request") {
           return console.log(response.status)
+        } else if (response.status === "Message Limit") {
+          setMessageLimitStatus(`You have reached the message limit. Try again in ${response.timeleft} seconds`)
         } else {
           setChat([...chat, { id: id, username: sender.username, message: message, timestamp: Date.now() }])
           setMessage('')
+          setMessageLimitStatus(false)
         }
       })
     }
@@ -43,6 +53,10 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat }) => {
     const date = new Date(timestamp) 
     return date.toLocaleString()
   }
+
+  useEffect(() => {
+    setChatStatus(conversationId)
+  })
 
   useEffect(() => { // RETRIEVE CHAT HISTORY
     async function getDirectChat() {
@@ -116,9 +130,10 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat }) => {
             <li key={data.id}>{data.username}: {data.message}<p>{formatDate(data.timestamp)}</p></li>
           ))}
         </ul>
-      </div>   
+      </div>
+      { messageLimitStatus ? <div className="message-limit">{messageLimitStatus}</div> : null }
       <div className="chat-type">
-        <input type="text" minLength="1" maxLength="500" required={true} value={message} onChange={(e) => setMessage(e.target.value)} />
+        <input id="chat-box" type="text" minLength="1" maxLength="500" required={true} value={message} onChange={(e) => setMessage(e.target.value)} />
         <button onClick={sendMessage}>SEND</button>
       </div>
     </div>
