@@ -6,9 +6,9 @@ const Messages = ({ socket, username, userId }) => {
   const [displayChat, setDisplayChat] = useState(false)
   const [users, setUsers] = useState([])
   const [userCount, setUserCount] = useState(null)
-  const [notification, setNotification] = useState(null)
-
+  const [notification, setNotification] = useState([])
   const [chat, setChat] = useState([])
+  const [chatStatus, setChatStatus] = useState(null)
   
   function initChat(e) {
     if (displayChat !== false) {
@@ -17,13 +17,23 @@ const Messages = ({ socket, username, userId }) => {
     const recipientId = e.target.dataset.userid
     const recipientUsername = e.target.innerText
     setDisplayChat({ recipientId: recipientId, recipientUsername: recipientUsername })
+    setNotification(notification.filter((user) => user !== recipientUsername ))
   }
 
   useEffect(() => { // RECEIVE PRIVATE MESSAGE
     socket.on("receive_priv_message", (data) => {
       console.log("receive private message")
-      setNotification(data.from.username)
+      console.log(notification)
+      console.log(data.from.username)
+      setNotification([...notification, data.from.username])
+
+      if (data.from.id !== chatStatus) {
+        console.log("!data id: ", data)
+
+      } else {
       setChat([...chat, { id: data.id, username: data.from.username, message: data.message, timestamp: data.timestamp }])
+      }
+
     })
     return () => {
       socket.off("receive_priv_message")
@@ -70,7 +80,6 @@ const Messages = ({ socket, username, userId }) => {
     }
   }, [users, userCount, socket])
 
-
   return (
     <>
     <div className="chat-frame">
@@ -84,8 +93,10 @@ const Messages = ({ socket, username, userId }) => {
                       className={(user.username === username) ? '' : 'link' } 
                       data-userid={user.userID}>{user.username + (user.username === username ? ' (you)' : '')}
                     </li>
-                    <div className="message-notify">
-                      { notification === user.username ? 
+                    <div className="message-notify" data-user={user.username}>
+                      { 
+                      notification.includes(user.username)
+                      ? 
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                           <circle cx="50" cy="50" r="50" fill="#6ee2a6"/>
                         </svg>
@@ -104,6 +115,7 @@ const Messages = ({ socket, username, userId }) => {
             notify={{notification, setNotification}}
             chat={chat}
             setChat={setChat}
+            setChatStatus={setChatStatus}
           /> 
           : null }
       </div>
