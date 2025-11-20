@@ -25,15 +25,13 @@ const Messages = ({ socket, username, userId }) => {
       console.log("receive private message")
       console.log(notification)
       console.log(data.from.username)
-      setNotification([...notification, data.from.username])
 
-      if (data.from.id !== chatStatus) {
-        console.log("!data id: ", data)
-
-      } else {
-      setChat([...chat, { id: data.id, username: data.from.username, message: data.message, timestamp: data.timestamp }])
+      if (data.from.id === chatStatus) {
+        setChat([...chat, { id: data.id, username: data.from.username, message: data.message, timestamp: data.timestamp }])
       }
-
+       if (displayChat.recipientUsername !== data.from.username) {
+        setNotification([...notification, data.from.username])
+      }
     })
     return () => {
       socket.off("receive_priv_message")
