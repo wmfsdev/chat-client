@@ -22,10 +22,6 @@ const Messages = ({ socket, username, userId }) => {
 
   useEffect(() => { // RECEIVE PRIVATE MESSAGE
     socket.on("receive_priv_message", (data) => {
-      console.log("receive private message")
-      console.log(notification)
-      console.log(data.from.username)
-
       if (data.from.id === chatStatus) {
         setChat([...chat, { id: data.id, username: data.from.username, message: data.message, timestamp: data.timestamp }])
       }
@@ -39,7 +35,6 @@ const Messages = ({ socket, username, userId }) => {
   })
 
   useEffect(() => { // REQUEST USERS - EMIT
-    console.log("Messages useEffect emit req_users")
     socket.emit("req_users")
   }, [socket])
   
@@ -53,9 +48,7 @@ const Messages = ({ socket, username, userId }) => {
   }, [users, socket])
 
   useEffect(() => { // RECEIVE USERS - ON
-    console.log("useEffect users")
     socket.on("users", (data, userCount) => {
-      console.log("users: ", data)
       setUserCount(userCount)
       setUsers(...users, data)
     })

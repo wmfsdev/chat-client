@@ -4,8 +4,7 @@ import { jwtDecode } from "jwt-decode"
 import Messages from "./Messages"
 
 const Profile = () => {
-  console.log("RENDER PROFILE")
-  
+
   const token = useLoaderData()
   const [socket] = useOutletContext()
 

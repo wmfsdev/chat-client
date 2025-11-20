@@ -3,7 +3,6 @@ import { useState } from "react"
 import { useNavigate, useOutletContext } from "react-router-dom"
 
 const Login = () => {
-  console.log("LOGIN")
   const navigate = useNavigate()
   const [socket, error, setError, auth, setAuth] = useOutletContext()
   const [loginStatus, setLoginStatus] = useState(auth)
@@ -31,7 +30,6 @@ const Login = () => {
       })
 
       if (response.status === 200) {
-        console.log("response status 200")
         setAuth(true)
         const token = await response.json()
         const key = Object.keys(token)
@@ -41,7 +39,6 @@ const Login = () => {
       }
 
       if (response.status === 401) {
-        console.log("401 - Authorisation")
         const { info } = await response.json()
         setLoginStatus(info.message)
       }
@@ -49,11 +46,9 @@ const Login = () => {
       if (response.status === 422) {
         const errors = await response.json()
         setValidationErrors(errors)
-        console.log(errors)
       }
 
     } catch(err) {
-      console.log(err)
       setError(err)
       navigate('/error')
     }

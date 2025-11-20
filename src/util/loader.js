@@ -18,7 +18,6 @@ export async function appLoader() {
       return true
     }
   } catch (err) {
-    console.log(err)
     return err
   }
 }

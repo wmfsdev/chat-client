@@ -46,7 +46,6 @@ function Signup() {
         setSignupStatus(info)
       }
     } catch(err) {
-      console.log(err)
       setError(err)
       navigate('/error')
     }

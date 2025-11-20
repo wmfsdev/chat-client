@@ -27,7 +27,6 @@ const App = () => {
   
   useEffect(() => {
     socket.on("connect_error", err => {
-      console.log("connect_error")
       if (socket.active) {
       // temporary disconnection, the socket will automatically try to reconnect
         console.log(err)
@@ -50,7 +49,7 @@ const App = () => {
   }, [location])
 
   const logOut = () => {
-    console.log("disconnect")
+    console.log("disconnected")
     socket.disconnect()
     setAuth(false)
     localStorage.clear()

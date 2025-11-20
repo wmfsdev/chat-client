@@ -12,7 +12,6 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat, setChatSta
     const id = crypto.randomUUID()
 
     if (conversationId === "public") { // PUBLIC
-      console.log("PUBLIC", conversationId)
       socket.emit("send_public_message", {
         id: id, 
         room: "public",
@@ -36,7 +35,6 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat, setChatSta
         }
       })
     } else { // PRIVATE
-      console.log("PRIVATE", conversationId)
       socket.emit("send_priv_message", { 
         from: { id: sender.userId, username: sender.username }, 
         to: conversationId, 
@@ -89,7 +87,6 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat, setChatSta
         })
         setChat(chat)
       } catch(err) {
-        console.log(err)
         return err
       }
     }
@@ -112,7 +109,6 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat, setChatSta
         })
         setChat(chat)
       } catch(err) {
-        console.log(err)
         return err
       }
     }
