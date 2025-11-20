@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat, setChatStatus }) => {
 
   const [message, setMessage] = useState('')
   const [messageLimitStatus, setMessageLimitStatus] = useState(false)
   const conversationId = recipientInfo.recipientId
+  const navigate = useNavigate()
   
   function sendMessage() {
     const id = crypto.randomUUID()
@@ -18,6 +20,11 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat, setChatSta
         username: sender.username,
         message: message
       }, (response) => {
+        if (response.status === "force_logout") {
+          socket.disconnect()
+          localStorage.clear()
+          navigate('/')
+        }
         if (response.status === "Bad Request") {
           return console.log(response.status)
         } else if (response.status === "Message Limit") {
@@ -36,6 +43,11 @@ const Chat = ({ recipientInfo, socket, sender, notify, chat, setChat, setChatSta
         message: message, 
         id: id
       }, (response) => {
+        if (response.status === "force_logout") {
+          socket.disconnect()
+          localStorage.clear()
+          navigate('/')
+        }
         if (response.status === "Bad Request") {
           return console.log(response.status)
         } else if (response.status === "Message Limit") {
